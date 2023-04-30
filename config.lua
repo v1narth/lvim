@@ -142,11 +142,28 @@ lvim.plugins = {
   { "github/copilot.vim",              name = "copilot" },
   { "olivercederborg/poimandres.nvim", name = "poimandres" },
   { "junegunn/fzf.vim" },
-  { "alvan/vim-closetag" },
+  {
+    "windwp/nvim-ts-autotag",
+    config = function()
+      require("nvim-ts-autotag").setup()
+    end,
+  },
+  {
+    'wfxr/minimap.vim',
+    build = "cargo install --locked code-minimap",
+    -- cmd = {"Minimap", "MinimapClose", "MinimapToggle", "MinimapRefresh", "MinimapUpdateHighlight"},
+    init = function()
+      vim.cmd("let g:minimap_width = 10")
+      vim.cmd("let g:minimap_auto_start = 1")
+      vim.cmd("let g:minimap_auto_start_win_enter = 1")
+    end,
+  },
 }
+
 
 vim.g.copilot_no_tab_map = true
 vim.g.copilot_assume_mapped = true
+
 vim.api.nvim_set_keymap("i", "<C-j>", 'copilot#Accept("")', { expr = true, silent = true })
 
 local cmp = require("cmp")
