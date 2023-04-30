@@ -16,6 +16,8 @@ lvim.format_on_save = true
 -- keymappings <https://www.lunarvim.org/docs/configuration/keybindings>
 lvim.leader = "space"
 -- add your own keymapping
+lvim.keys.insert_mode["jk"] = "<Esc>"
+lvim.keys.insert_mode["kj"] = "<Esc>"
 lvim.keys.normal_mode["<C-s>"] = ":w<cr>"
 lvim.keys.normal_mode["<S-l>"] = ":BufferLineCycleNext<CR>"
 lvim.keys.normal_mode["<S-h>"] = ":BufferLineCyclePrev<CR>"
