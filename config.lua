@@ -16,17 +16,29 @@ lvim.format_on_save = true
 
 -- keymappings <https://www.lunarvim.org/docs/configuration/keybindings>
 lvim.leader = "space"
+
 -- add your own keymapping
 lvim.keys.insert_mode["jk"] = "<Esc>"
 lvim.keys.insert_mode["kj"] = "<Esc>"
+lvim.keys.insert_mode["<C-s>"] = "<Esc>:w<cr>"
+
 lvim.keys.normal_mode["<C-s>"] = ":w<cr>"
 lvim.keys.normal_mode["<S-l>"] = ":BufferLineCycleNext<CR>"
 lvim.keys.normal_mode["<S-h>"] = ":BufferLineCyclePrev<CR>"
 
-lvim.keys.insert_mode["<C-s>"] = "<Esc>:w<cr>"
+lvim.builtin.which_key.mappings["f"] = {
+  require("lvim.core.telescope.custom-finders").find_project_files,
+  "Find file"
+}
 
 lvim.builtin.telescope.theme = "center"
 lvim.builtin.telescope.defaults.path_display = { "truncate" }
+lvim.builtin.which_key.mappings.b.f = {
+  "<cmd>Telescope buffers<cr>",
+  "Find"
+}
+
+lvim.builtin.telescope.defaults.path_display = nil
 lvim.builtin.telescope.pickers.find_files.previewer = nil
 lvim.builtin.telescope.pickers.git_files.previewer = nil
 
