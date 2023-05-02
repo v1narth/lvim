@@ -6,6 +6,7 @@
 vim.opt.shiftwidth = 2
 vim.opt.tabstop = 2
 vim.opt.relativenumber = false
+vim.wo.number = true
 
 -- general
 lvim.log.level = "info"
@@ -24,6 +25,10 @@ lvim.keys.normal_mode["<S-h>"] = ":BufferLineCyclePrev<CR>"
 
 lvim.keys.insert_mode["<C-s>"] = "<Esc>:w<cr>"
 
+lvim.builtin.telescope.theme = "center"
+lvim.builtin.telescope.defaults.path_display = { "truncate" }
+lvim.builtin.telescope.pickers.find_files.previewer = nil
+lvim.builtin.telescope.pickers.git_files.previewer = nil
 
 -- -- Use which-key to add extra bindings with the leader-key prefix
 -- lvim.builtin.which_key.mappings["W"] = { "<cmd>noautocmd w<cr>", "Save without formatting" }
@@ -36,6 +41,7 @@ lvim.colorscheme = "poimandres"
 lvim.builtin.alpha.active = true
 lvim.builtin.alpha.mode = "dashboard"
 lvim.builtin.terminal.active = true
+lvim.builtin.terminal.size = 60
 lvim.builtin.nvimtree.setup.view.side = "left"
 lvim.builtin.nvimtree.setup.renderer.icons.show.git = true
 
@@ -64,7 +70,6 @@ lvim.builtin.which_key.mappings["T"] = {
   l = { "<cmd>Trouble loclist<cr>", "LocationList" },
   w = { "<cmd>Trouble lsp_workspace_diagnostics<cr>", "Diagnostics" },
 }
-
 lvim.builtin.project.detection_methods = { "pattern", "lsp" }
 lvim.builtin.project.patterns = { ".git", "_darcs", ".hg", ".bzr", ".svn", "Makefile", "package.json", "yarn.lock",
   "Cargo.toml", "go.mod" }
@@ -85,6 +90,14 @@ formatters.setup {
   },
 }
 
+local linters = require("lvim.lsp.null-ls.linters")
+linters.setup({
+  {
+    name = "eslint_d",
+    -- args = { "--max-warnings", "0" },
+    -- filetypes = { "javascript", "javascriptreact", "typescript", "typescriptreact" },
+  },
+})
 -- lvim.builtin.treesitter.ignore_install = { "haskell" }
 
 -- -- always installed on startup, useful for parsers without a strict filetype
@@ -160,6 +173,16 @@ lvim.plugins = {
       vim.cmd("let g:minimap_auto_start_win_enter = 1")
     end,
   },
+  {
+    "kylechui/nvim-surround",
+    version = "*", -- Use for stability; omit to use `main` branch for the latest features
+    event = "VeryLazy",
+    config = function()
+      require("nvim-surround").setup({
+        -- Configuration here, or leave empty to use defaults
+      })
+    end
+  }
 }
 
 
