@@ -38,6 +38,11 @@ lvim.builtin.which_key.mappings.b.f = {
   "Find"
 }
 
+lvim.builtin.which_key.mappings.o = {
+  "<cmd>SymbolsOutline<cr>",
+  "Symbols outline"
+}
+
 lvim.builtin.telescope.defaults.path_display = nil
 lvim.builtin.telescope.pickers.find_files.previewer = nil
 lvim.builtin.telescope.pickers.git_files.previewer = nil
@@ -47,8 +52,8 @@ lvim.builtin.telescope.pickers.git_files.previewer = nil
 lvim.builtin.which_key.mappings["P"] = { "<cmd>Telescope projects<CR>", "Projects" }
 
 -- -- Change theme settings
-lvim.colorscheme = "poimandres"
--- lvim.colorscheme = "gruvbox-material"
+-- lvim.colorscheme = "poimandres"
+lvim.colorscheme = "gruvbox-material"
 
 lvim.builtin.alpha.active = true
 lvim.builtin.alpha.mode = "dashboard"
@@ -175,16 +180,17 @@ lvim.plugins = {
       require("nvim-ts-autotag").setup()
     end,
   },
-  {
-    'wfxr/minimap.vim',
-    build = "cargo install --locked code-minimap",
-    -- cmd = {"Minimap", "MinimapClose", "MinimapToggle", "MinimapRefresh", "MinimapUpdateHighlight"},
-    init = function()
-      vim.cmd("let g:minimap_width = 10")
-      vim.cmd("let g:minimap_auto_start = 1")
-      vim.cmd("let g:minimap_auto_start_win_enter = 1")
-    end,
-  },
+  -- {
+  --   'wfxr/minimap.vim',
+  --   -- cmd = {"Minimap", "MinimapClose", "MinimapToggle", "MinimapRefresh", "MinimapUpdateHighlight"},
+  --   init = function()
+  --     vim.cmd("let g:minimap_width = 10")
+  --     vim.cmd("let g:minimap_auto_start = 1")
+  --     vim.cmd("let g:minimap_auto_start_win_enter = 1")
+  --     vim.cmd("let g:minimap_highlight_search = 1")
+  --     vim.cmd("let g:minimap_git_colors = 1")
+  --   end,
+  -- },
   {
     "kylechui/nvim-surround",
     version = "*", -- Use for stability; omit to use `main` branch for the latest features
@@ -194,13 +200,81 @@ lvim.plugins = {
         -- Configuration here, or leave empty to use defaults
       })
     end
-  }
+  },
+  {
+    "simrat39/symbols-outline.nvim",
+    config = function()
+      require('symbols-outline').setup()
+    end
+  },
+  {
+    "echasnovski/mini.map",
+    branch = "stable",
+    config = function()
+      require('mini.map').setup()
+      local map = require('mini.map')
+      map.setup({
+        integrations = {
+          map.gen_integration.builtin_search(),
+          map.gen_integration.gitsigns(),
+          map.gen_integration.diagnostic({
+            error = 'DiagnosticFloatingError',
+            warn  = 'DiagnosticFloatingWarn',
+            info  = 'DiagnosticFloatingInfo',
+            hint  = 'DiagnosticFloatingHint',
+          }),
+        },
+        symbols = {
+          encode = map.gen_encode_symbols.dot('4x2'),
+        },
+        window = {
+          side = 'right',
+          width = 20, -- set to 1 for a pure scrollbar :)
+          winblend = 15,
+          show_integration_count = false,
+          focusable = true,
+        },
+      })
+    end
+  },
+  -- { "junegunn/rainbow_parentheses.vim" }
+  -- {
+  --   "ray-x/lsp_signature.nvim",
+  --   event = "BufRead",
+  --   config = function() require "lsp_signature".on_attach() end,
+  -- },
+}
+
+lvim.autocommands = {
+  {
+    { "BufEnter", "Filetype" },
+    {
+      desc = "Open mini.map and exclude some filetypes",
+      pattern = { "*" },
+      callback = function()
+        local exclude_ft = {
+          "qf",
+          "NvimTree",
+          "toggleterm",
+          "TelescopePrompt",
+          "alpha",
+          "netrw",
+        }
+        local map = require('mini.map')
+        if vim.tbl_contains(exclude_ft, vim.o.filetype) then
+          vim.b.minimap_disable = true
+          map.close()
+        elseif vim.o.buftype == "" then
+          map.open()
+        end
+      end,
+    },
+  },
 }
 
 
 vim.g.copilot_no_tab_map = true
 vim.g.copilot_assume_mapped = true
-
 vim.api.nvim_set_keymap("i", "<C-j>", 'copilot#Accept("")', { expr = true, silent = true })
 
 local cmp = require("cmp")
@@ -221,4 +295,11 @@ lvim.builtin.cmp.mapping = cmp.mapping.preset.insert({
 --     -- let treesitter use bash highlight for zsh files as well
 --     require("nvim-treesitter.highlight").attach(0, "bash")
 --   end,
+-- })
+
+-- vim.api.nvim_create_autocmd("BufWinEnter", {
+--   pattern = "*",
+--   callback = function()
+--     vim.cmd [[highlight minimapCursor ctermbg=59 ctermfg=228 guibg=#5F5F5F guifg=#FFFF87 | highlight minimapRange ctermbg=242 ctermfg=228 guibg=#4F4F4F guifg=#FFFF87]]
+--   end
 -- })
