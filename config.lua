@@ -31,6 +31,16 @@ lvim.builtin.which_key.mappings["f"] = {
   "Find file"
 }
 
+lvim.lsp.buffer_mappings.normal_mode["gd"] = {
+  ":lua require'telescope.builtin'.lsp_definitions()<CR>",
+  "Find definitions"
+}
+
+lvim.lsp.buffer_mappings.normal_mode["gr"] = {
+  ":lua require'telescope.builtin'.lsp_references()<CR>",
+  "Find references"
+}
+
 lvim.builtin.telescope.theme = "center"
 lvim.builtin.telescope.defaults.path_display = { "truncate" }
 lvim.builtin.which_key.mappings.b.f = {
@@ -229,7 +239,7 @@ lvim.plugins = {
         },
         window = {
           side = 'right',
-          width = 20, -- set to 1 for a pure scrollbar :)
+          width = 1, -- set to 1 for a pure scrollbar :)
           winblend = 15,
           show_integration_count = false,
           focusable = true,
@@ -237,7 +247,7 @@ lvim.plugins = {
       })
     end
   },
-  -- { "junegunn/rainbow_parentheses.vim" }
+  { "junegunn/rainbow_parentheses.vim" },
   -- {
   --   "ray-x/lsp_signature.nvim",
   --   event = "BufRead",
@@ -272,10 +282,9 @@ lvim.autocommands = {
   },
 }
 
-
-vim.g.copilot_no_tab_map = true
 vim.g.copilot_assume_mapped = true
-vim.api.nvim_set_keymap("i", "<C-j>", 'copilot#Accept("")', { expr = true, silent = true })
+-- vim.g.copilot_no_tab_map = true
+-- vim.api.nvim_set_keymap("i", "<C-j>", 'copilot#Accept("")', { expr = true, silent = true })
 
 local cmp = require("cmp")
 lvim.builtin.cmp.mapping = cmp.mapping.preset.insert({
